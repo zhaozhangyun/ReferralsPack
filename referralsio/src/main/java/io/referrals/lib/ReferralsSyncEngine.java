@@ -27,8 +27,9 @@ public class ReferralsSyncEngine {
             throw new NetworkOnMainThreadException();
         }
 
-        SystemClock.sleep(1_000);
-        boolean success = Math.random() > 0.1; // successful 90% of the time
-        return success;
+        SystemClock.sleep(1_000L);
+        boolean result = Math.random() > 0.1; // successful 90% of the time
+        L.d(TAG, "sync result: " + result);
+        return result;
     }
 }

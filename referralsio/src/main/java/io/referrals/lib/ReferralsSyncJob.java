@@ -18,6 +18,7 @@ public class ReferralsSyncJob extends Job {
     private static final String TAG = "ReferralsSyncJob";
     public static final String REFERRALS_TAG = "job_referrals_tag";
     private ReferralsConfiguration config;
+    private int PENDING_ID = 1;
 
     public ReferralsSyncJob(ReferralsConfiguration config) {
         this.config = config;
@@ -26,16 +27,16 @@ public class ReferralsSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-        boolean success = new ReferralsSyncEngine(getContext()).sync();
-        L.d(TAG, "call onRunJob(): success=" + success);
+        boolean result = new ReferralsSyncEngine(getContext()).sync();
+        L.d(TAG, "call onRunJob(): result=" + result);
 
         if (!config.isNotify()) {
             // TODO do something here ...
-            return success ? Result.SUCCESS : Result.FAILURE;
+            return result ? Result.SUCCESS : Result.FAILURE;
         }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0,
-                new Intent(getContext(), config.getActivityClass()), 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), PENDING_ID,
+                new Intent(getContext(), ReferralsReceiver.class), 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(REFERRALS_TAG,
@@ -58,21 +59,17 @@ public class ReferralsSyncJob extends Job {
                 .setShowWhen(true)
                 .setColor(config.getNotificationColor())
                 .setLocalOnly(true);
-        try {
-            int resSmallIconId = config.getContext().getResources().getIdentifier(
-                    "ref_io_notification_icon", "drawable",
-                    config.getContext().getPackageName());
-            if (resSmallIconId > 0) {
-                builder.setSmallIcon(resSmallIconId);
-            } else {
-                builder.setSmallIcon(R.drawable.ref_io_notification_icon_default);
-            }
-        } catch (Exception e) {
-            L.e(TAG, "getSmallIconError", e);
+        int resSmallIconId = config.getContext().getResources().getIdentifier(
+                "ref_io_notification_icon", "drawable",
+                config.getContext().getPackageName());
+        if (resSmallIconId > 0) {
+            builder.setSmallIcon(resSmallIconId);
+        } else {
+            builder.setSmallIcon(R.drawable.ref_io_notification_icon_default);
         }
 
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
-        return success ? Result.SUCCESS : Result.FAILURE;
+        return result ? Result.SUCCESS : Result.FAILURE;
     }
 }

@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="io.referrals.lib">
 
     <!-- 必选权限< -->
@@ -31,5 +32,13 @@
                 <action android:name="com.evernote.android.job.ADD_JOB_CREATOR" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".ReferralsReceiver"
+            android:exported="false"></receiver>
+
+        <service
+            android:name="com.evernote.android.job.gcm.PlatformGcmService"
+            tools:node="remove" />
     </application>
 </manifest>

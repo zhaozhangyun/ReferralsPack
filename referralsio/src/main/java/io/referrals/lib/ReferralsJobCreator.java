@@ -32,7 +32,7 @@ public class ReferralsJobCreator implements JobCreator {
         @Override
         protected void addJobCreator(@NonNull Context context, @NonNull JobManager manager) {
             L.d(TAG, "call addJobCreator: " + manager);
-            // manager.addJobCreator(new ReferralsJobCreator());
+            manager.addJobCreator(new ReferralsJobCreator(ReferralsHolder.getConfig()));
         }
     }
 }

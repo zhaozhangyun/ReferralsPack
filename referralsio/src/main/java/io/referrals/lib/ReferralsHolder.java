@@ -17,17 +17,20 @@ public class ReferralsHolder {
     private static final String TAG = "ReferralsHolder";
     private static ReferralsHolder instance = new ReferralsHolder();
     private static JobManager jobManager;
+    private static ReferralsConfiguration sConfig;
     private int lastJobId;
 
     private ReferralsHolder() {
     }
 
     public static void fire(Context context, final ReferralsConfiguration config) {
-        JobManager.create(context).addJobCreator(new ReferralsJobCreator(config));
-        jobManager = JobManager.instance();
+        L.i(TAG, "call fire(): context=" + context);
+        sConfig = config;
+        jobManager = JobManager.create(context);
         if (config.isForceCannelJob()) {
             jobManager.cancelAll();
         }
+//        jobManager.addJobCreator(new ReferralsJobCreator(config));
         new Handler(Looper.myLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -37,7 +40,11 @@ public class ReferralsHolder {
                     instance.scheduleJob();
                 }
             }
-        }, 3000);
+        }, 2_000L);
+    }
+
+    static ReferralsConfiguration getConfig() {
+        return sConfig;
     }
 
     private int scheduleJob() {
