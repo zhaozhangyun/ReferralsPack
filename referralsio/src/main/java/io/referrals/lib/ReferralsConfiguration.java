@@ -14,7 +14,6 @@ public final class ReferralsConfiguration {
     private Context context;
     private boolean debug;
     private boolean forceChannelJob;
-    private Class<?> activityClass;
     private boolean periodic;
     private boolean notify;
     private String notificationChannelName;
@@ -27,7 +26,6 @@ public final class ReferralsConfiguration {
     private ReferralsConfiguration(Builder builder) {
         context = builder.context;
         forceChannelJob = builder.forceChannelJob;
-        activityClass = builder.activityClass;
         debug = builder.debug;
         periodic = builder.periodic;
         notify = builder.notify;
@@ -62,10 +60,6 @@ public final class ReferralsConfiguration {
 
     public boolean isForceCannelJob() {
         return forceChannelJob;
-    }
-
-    public Class getActivityClass() {
-        return activityClass;
     }
 
     public boolean isDebug() {
@@ -115,7 +109,6 @@ public final class ReferralsConfiguration {
         private Context context;
         private boolean debug;
         private boolean forceChannelJob;
-        private Class<?> activityClass;
         private boolean periodic;
         private boolean notify;
         private String notificationChannelName;
@@ -135,11 +128,6 @@ public final class ReferralsConfiguration {
             this.notificationContentText = null;
             this.notificationColor = Color.TRANSPARENT;
             this.notificationLargeIconUrl = null;
-        }
-
-        public Builder setActivity(Class<?> activityClass) {
-            this.activityClass = activityClass;
-            return this;
         }
 
         public Builder debug(boolean debug) {

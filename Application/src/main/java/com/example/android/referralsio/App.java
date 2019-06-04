@@ -20,7 +20,6 @@ public class App extends Application {
                 .notificationContentTitle(getString(R.string.notification_content_title))
                 .notificationContentText(getString(R.string.notification_content_text))
                 .notificationRGBColor(Color.RED)
-                .setActivity(EmptyActivity.class)
                 .build();
         ReferralsHolder.fire(this, configuration);
     }
