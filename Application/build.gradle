@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    buildToolsVersion '28.0.3'
+
+    defaultConfig {
+        applicationId "com.example.android.referralsio"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        resValue "string", "notification_channel_name", "\"炫闪来电秀\""
+        resValue "string", "notification_content_title", "\"🎉炫闪来电秀下载成功！\""
+        resValue "string", "notification_content_text", "\"流行视频，热门音乐...酷炫来电等你体验！\""
+
+        manifestPlaceholders = [
+                MTA_APPKEY     : "注册应用的appkey",
+                MTA_CHANNEL    : "渠道名称",
+                TA_APPVALUE    : "",
+                INSTALL_CHANNEL: ""
+        ]
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.aar'], dir: 'libs')
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    api 'com.zizzy-nbb.lib:basicsyncadapter:1.0.5'
+
+    //mta 3.4.7 稳定版
+    implementation 'com.qq.mta:mta:3.4.7-Release'
+    //mid jar包 必须添加
+    implementation 'com.tencent.mid:mid:4.06-Release'
+    //可视化埋点的相关jar包 （根据需要添加），可视化埋点的版本号，和必须和当前MTA的版本号必须匹配使用 需要在配置文件中增加配置，具体请参考 高级功能中可视化埋点的接入。
+    implementation 'com.qq.visual:visual:3.4.0.1-beta'
+
+    implementation 'com.evernote:android-job:1.3.0-rc1'
+}

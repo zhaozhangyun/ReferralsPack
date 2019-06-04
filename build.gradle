@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+        maven {
+            url 'https://dl.bintray.com/zizzy0301/zizzy-nbb'
+        }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.2.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com'
+        }
+        jcenter()
+        maven {
+            url 'https://dl.bintray.com/zizzy0301/zizzy-nbb'
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    google()
+    maven {
+        url 'https://dl.bintray.com/zizzy0301/zizzy-nbb'
+    }
+}
+
+
+
+
+
+
+
+
