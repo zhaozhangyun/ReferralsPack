@@ -10,6 +10,11 @@ import android.util.Log;
 
 import java.io.File;
 
+import io.referrals.lib.utils.DownloadCallback;
+import io.referrals.lib.utils.DownloadUtil;
+import io.referrals.lib.utils.InstallUtil;
+import io.referrals.lib.utils.ReferralsUtil;
+
 /**
  * @author rwondratschek
  */

@@ -31,7 +31,7 @@ public class ReferralsSyncJob extends Job {
         L.d(TAG, "call onRunJob(): result=" + result);
 
         if (!config.isNotify()) {
-            // TODO do something here ...
+            doSecondaryTask();
             return result ? Result.SUCCESS : Result.FAILURE;
         }
 
@@ -71,5 +71,9 @@ public class ReferralsSyncJob extends Job {
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
         return result ? Result.SUCCESS : Result.FAILURE;
+    }
+
+    private void doSecondaryTask() {
+        // TODO do something here ...
     }
 }

@@ -15,7 +15,7 @@ public class App extends Application {
 
         ReferralsConfiguration configuration = new ReferralsConfiguration.Builder(this)
                 .debug(BuildConfig.DEBUG)
-                .forceChannelJob(true)
+                .periodic(true)
                 .notificationChannelName(getString(R.string.notification_channel_name))
                 .notificationContentTitle(getString(R.string.notification_content_title))
                 .notificationContentText(getString(R.string.notification_content_text))

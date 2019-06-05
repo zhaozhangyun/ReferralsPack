@@ -1,4 +1,4 @@
-package io.referrals.lib;
+package io.referrals.lib.utils;
 
 import android.content.Context;
 

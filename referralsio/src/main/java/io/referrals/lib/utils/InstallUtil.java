@@ -1,4 +1,4 @@
-package io.referrals.lib;
+package io.referrals.lib.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +8,14 @@ import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
+import io.referrals.lib.BuildConfig;
+
 public class InstallUtil {
     /**
      * 安装下载好的APK
+     *
      * @param context 必须是Activity的上下文
-     * @param uri 文件对应的URI
+     * @param uri     文件对应的URI
      */
     public static void installApk(Context context, Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -35,7 +38,7 @@ public class InstallUtil {
                 uri = Uri.fromFile(file);
             }
             return uri;
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
         return null;

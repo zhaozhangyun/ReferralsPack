@@ -1,4 +1,4 @@
-package io.referrals.lib;
+package io.referrals.lib.utils;
 
 import android.content.Context;
 
@@ -10,7 +10,6 @@ import java.net.URL;
 
 public class DownloadUtil {
     public static final String APK_FOLDER = "downloads";
-
 
     public static String getDownloadFilePath(Context context, String url) {
         String rootDir = context.getExternalFilesDir(null).getAbsolutePath();

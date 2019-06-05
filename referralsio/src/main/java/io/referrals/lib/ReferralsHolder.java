@@ -55,7 +55,7 @@ public class ReferralsHolder {
         JobRequest.Builder builder = new JobRequest.Builder(ReferralsSyncJob.REFERRALS_TAG);
         builder.setExecutionWindow(3_000L, 4_000L)
                 .setBackoffCriteria(5_000L, JobRequest.BackoffPolicy.LINEAR)
-                .setRequiresCharging(true)
+                .setRequiresCharging(false)
                 .setRequiresDeviceIdle(false)
                 .setRequiredNetworkType(JobRequest.NetworkType.ANY)
                 .setRequirementsEnforced(true);
@@ -81,6 +81,8 @@ public class ReferralsHolder {
     private int schedulePeriodicJob() {
         lastJobId = new JobRequest.Builder(ReferralsSyncJob.REFERRALS_TAG)
                 .setPeriodic(JobRequest.MIN_INTERVAL, JobRequest.MIN_FLEX)
+                .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
                 .setRequiredNetworkType(JobRequest.NetworkType.ANY)
                 .build()
                 .schedule();
