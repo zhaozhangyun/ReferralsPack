@@ -18,6 +18,7 @@ public class InstallUtil {
      * @param uri     文件对应的URI
      */
     public static void installApk(Context context, Uri uri) {
+        /*
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { // 7.0+以上版本
@@ -26,7 +27,21 @@ public class InstallUtil {
         } else {
             intent.setDataAndType(uri, "application/vnd.android.package-archive");
         }
+        */
+        Intent intent = getApkInstalledIntent(uri);
         context.startActivity(intent);
+    }
+
+    public static Intent getApkInstalledIntent(Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) { // 7.0+以上版本
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(uri, "application/vnd.android.package-archive");
+        }
+        return intent;
     }
 
     public static Uri getFileUri(Context context, File file) {
