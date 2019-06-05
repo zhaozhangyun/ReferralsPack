@@ -1,9 +1,12 @@
 package io.referrals.lib;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.evernote.android.job.JobApi;
+import com.evernote.android.job.JobConfig;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
@@ -26,6 +29,32 @@ public class ReferralsHolder {
     public static void fire(Context context, final ReferralsConfiguration config) {
         L.i(TAG, "call fire(): context=" + context);
         sConfig = config;
+
+        JobConfig.reset();
+
+        boolean gcmIsSupported = JobApi.GCM.isSupported(context);
+        L.v(TAG, "gcmIsSupported: " + gcmIsSupported);
+
+        if (gcmIsSupported) {
+            JobConfig.setApiEnabled(JobApi.GCM, true);
+        } else {
+            JobConfig.setApiEnabled(JobApi.GCM, false);
+        }
+        boolean gcmIsApiEnabled = JobConfig.isApiEnabled(JobApi.GCM);
+        L.v(TAG, "gcmIsApiEnabled: " + gcmIsApiEnabled);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            JobConfig.forceApi(JobApi.V_26);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            JobConfig.forceApi(JobApi.V_24);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            JobConfig.forceApi(JobApi.V_21);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            JobConfig.forceApi(JobApi.V_19);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            JobConfig.forceApi(JobApi.V_14);
+        }
+
         jobManager = JobManager.create(context);
         if (config.isForceCannelJob()) {
             jobManager.cancelAll();

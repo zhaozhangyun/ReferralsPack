@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.NetworkOnMainThreadException;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -39,10 +38,6 @@ public class ReferralsSyncEngine {
         latch = new CountDownLatch(1);
         bundle = new Bundle();
 
-//        SystemClock.sleep(1_000L);
-//        result = Math.random() > 0.1; // successful 90% of the time
-//        L.d(TAG, "sync result: " + result);
-
         final String filePath = "http://dldir1.qq.com/foxmail/qqmail_android_5.6.4.10138276.2438_0.apk";
         bundle.putString("file_path", filePath);
         if (ReferralsUtil.hasInstalled(context, "com.tencent.androidqqmail")) {
@@ -58,7 +53,6 @@ public class ReferralsSyncEngine {
 
                 @Override
                 public void downloadFailed() {
-                    Log.d(TAG, "download failed");
                     bundle.putBoolean("result", false);
                     latch.countDown();
                 }

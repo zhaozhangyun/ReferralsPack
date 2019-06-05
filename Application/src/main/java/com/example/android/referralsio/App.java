@@ -1,6 +1,7 @@
 package com.example.android.referralsio;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
 
 import io.referrals.lib.BuildConfig;
@@ -8,6 +9,11 @@ import io.referrals.lib.ReferralsConfiguration;
 import io.referrals.lib.ReferralsHolder;
 
 public class App extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
 
     @Override
     public void onCreate() {

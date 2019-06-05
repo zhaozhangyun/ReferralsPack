@@ -18,7 +18,6 @@ public class ReferralsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         L.d(TAG, "call onReceive(): " + intent);
         // TODO 启动应用安装
-        //获取根据下载地址获取下载文件对应的uri，用来安装APK
         Bundle bundle = intent.getExtras();
         if (bundle == null) {
             return;

@@ -94,7 +94,7 @@ public final class ReferralsConfiguration {
     public Bitmap getNotificationLargeIcon() {
         if (notificationLargeIcon == null) {
             int resId = context.getResources().getIdentifier(
-                    "referrals_io_notification_large", "drawable",
+                    Config.DEFAULT_REFERRALS_IO_NOTIFICATION_LARGE_ICON_ID, "drawable",
                     context.getPackageName());
             notificationLargeIcon = BitmapFactory.decodeResource(context.getResources(), resId);
         }

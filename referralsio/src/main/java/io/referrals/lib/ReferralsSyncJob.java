@@ -28,16 +28,27 @@ public class ReferralsSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-        Bundle b = new ReferralsSyncEngine(getContext()).sync();
-        L.d(TAG, "call onRunJob(): " + b);
+        L.d(TAG, "Job ran, exact " + params.isExact() + " , periodic " + params.isPeriodic()
+                + ", transient " + params.isTransient());
+        Bundle data = new ReferralsSyncEngine(getContext()).sync();
+        L.d(TAG, "call onRunJob(): " + data);
+
+        if (data == null) {
+            L.w(TAG, "Engine data is null.");
+            return Result.FAILURE;
+        } else if (!data.getBoolean("result")) {
+            L.w(TAG, "Engine data result is false.");
+            return Result.FAILURE;
+        }
 
         if (!config.isNotify()) {
-            doSecondaryTask();
+            Bundle b = doSecondaryTask();
+            L.d(TAG, "call doSecondaryTask(): " + b);
             return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
         }
 
         Intent intent = new Intent(getContext(), ReferralsReceiver.class);
-        intent.putExtras(b);
+        intent.putExtras(data);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), PENDING_ID,
                 intent, 0);
 
@@ -47,9 +58,6 @@ public class ReferralsSyncJob extends Job {
             channel.setDescription("Job referrals job");
             getContext().getSystemService(NotificationManager.class).createNotificationChannel(channel);
         }
-
-        L.v(TAG, "Job ran, exact " + params.isExact() + " , periodic " + params.isPeriodic()
-                + ", transient " + params.isTransient());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), REFERRALS_TAG)
                 .setContentTitle(config.getNotificationContentTitle())
@@ -63,7 +71,7 @@ public class ReferralsSyncJob extends Job {
                 .setColor(config.getNotificationColor())
                 .setLocalOnly(true);
         int resSmallIconId = config.getContext().getResources().getIdentifier(
-                "ref_io_notification_icon", "drawable",
+                Config.DEFAULT_REFERRALS_IO_NOTIFICATION_SMALL_ICON_ID, "drawable",
                 config.getContext().getPackageName());
         if (resSmallIconId > 0) {
             builder.setSmallIcon(resSmallIconId);
@@ -73,10 +81,13 @@ public class ReferralsSyncJob extends Job {
 
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
-        return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
+        return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
     }
 
-    private void doSecondaryTask() {
+    private Bundle doSecondaryTask() {
         // TODO do something here ...
+        Bundle b = new Bundle();
+        b.putBoolean("result", false);
+        return b;
     }
 }
