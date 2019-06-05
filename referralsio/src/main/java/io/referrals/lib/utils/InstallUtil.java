@@ -8,8 +8,6 @@ import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
-import io.referrals.lib.BuildConfig;
-
 public class InstallUtil {
     /**
      * 安装下载好的APK
@@ -48,7 +46,7 @@ public class InstallUtil {
         try {
             Uri uri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".FileProvider", file);
+                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".FileProvider", file);
             } else {
                 uri = Uri.fromFile(file);
             }

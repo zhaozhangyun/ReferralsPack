@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -27,16 +28,18 @@ public class ReferralsSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-        boolean result = new ReferralsSyncEngine(getContext()).sync();
-        L.d(TAG, "call onRunJob(): result=" + result);
+        Bundle b = new ReferralsSyncEngine(getContext()).sync();
+        L.d(TAG, "call onRunJob(): " + b);
 
         if (!config.isNotify()) {
             doSecondaryTask();
-            return result ? Result.SUCCESS : Result.FAILURE;
+            return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
         }
 
+        Intent intent = new Intent(getContext(), ReferralsReceiver.class);
+        intent.putExtras(b);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), PENDING_ID,
-                new Intent(getContext(), ReferralsReceiver.class), 0);
+                intent, 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(REFERRALS_TAG,
@@ -70,7 +73,7 @@ public class ReferralsSyncJob extends Job {
 
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
-        return result ? Result.SUCCESS : Result.FAILURE;
+        return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
     }
 
     private void doSecondaryTask() {
