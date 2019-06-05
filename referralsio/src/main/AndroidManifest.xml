@@ -6,12 +6,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 可选权限< -->
     <!--uses-permission android:name="android.permission.READ_PHONE_STATE" /-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--uses-permission android:name="android.permission.WRITE_SETTINGS" /-->
 
-    <application>
+    <application
+        android:networkSecurityConfig="@xml/network_security_config">
         <!--provider
             android:name="com.tencent.mid.api.MidProvider"
             android:authorities="${applicationId}.TENCENT.MID.V3"
@@ -40,5 +44,16 @@
         <service
             android:name="com.evernote.android.job.gcm.PlatformGcmService"
             tools:node="remove" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider_paths"/>
+        </provider>
     </application>
 </manifest>
