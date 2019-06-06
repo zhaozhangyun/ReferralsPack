@@ -2,7 +2,6 @@ package com.example.android.referralsio;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Color;
 
 import com.tencent.stat.MtaSDkException;
 import com.tencent.stat.StatConfig;
@@ -10,8 +9,8 @@ import com.tencent.stat.StatService;
 import com.tencent.stat.common.StatConstants;
 
 import io.referrals.lib.BuildConfig;
-import io.referrals.lib.ReferralsConfiguration;
 import io.referrals.lib.ReferralsHolder;
+import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class App extends Application {
 

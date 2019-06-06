@@ -9,6 +9,7 @@ import android.support.annotation.WorkerThread;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.referrals.lib.configuration.AppConfiguration;
 import io.referrals.lib.utils.DownloadCallback;
 import io.referrals.lib.utils.ReferralsUtil;
 
@@ -65,6 +66,7 @@ public class ReferralsSyncEngine {
             }
         }
 
+        L.i(TAG, "sync result: " + bundle);
         return bundle;
     }
 }

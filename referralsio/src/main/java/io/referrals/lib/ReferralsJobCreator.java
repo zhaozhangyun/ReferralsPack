@@ -8,6 +8,8 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 import com.evernote.android.job.JobManager;
 
+import io.referrals.lib.configuration.AppConfiguration;
+
 public class ReferralsJobCreator implements JobCreator {
     private static final String TAG = "ReferralsJobCreator";
     private AppConfiguration config;

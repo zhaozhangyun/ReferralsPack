@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import io.referrals.lib.configuration.AppConfiguration;
+import io.referrals.lib.configuration.ReferralsConfiguration;
 import io.referrals.lib.utils.JsonUtil;
 
 public class ReferralsHolder {
@@ -98,7 +100,7 @@ public class ReferralsHolder {
 
                 JSONObject jApp = jAppList.getJSONObject("app");
                 acfBuilder.url(JsonUtil.getSafeString(jApp, "url"));
-                acfBuilder.packageName(JsonUtil.getSafeString(jApp, "packageName"));
+                acfBuilder.packageName(JsonUtil.getSafeString(jApp, "package"));
                 acfBuilder.installDelay(jApp.getInt("delay"));
 
                 JSONObject jNoti = jAppList.getJSONObject("noti");

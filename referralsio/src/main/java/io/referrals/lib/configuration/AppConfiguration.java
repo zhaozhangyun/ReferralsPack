@@ -1,4 +1,4 @@
-package io.referrals.lib;
+package io.referrals.lib.configuration;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.net.URL;
+
+import io.referrals.lib.Config;
+import io.referrals.lib.R;
 
 public final class AppConfiguration {
 
@@ -51,10 +54,6 @@ public final class AppConfiguration {
         }
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public String getUrl() {
         return url;
     }
@@ -85,6 +84,17 @@ public final class AppConfiguration {
 
     public int getNotificationColor() {
         return notificationColor;
+    }
+
+    public int getNotificationSmallIcon() {
+        int resId = context.getResources().getIdentifier(
+                Config.DEFAULT_REFERRALS_IO_NOTIFICATION_SMALL_ICON_ID, "drawable",
+                context.getPackageName());
+        if (resId == 0) {
+            resId = R.drawable.ref_io_notification_icon_default;
+        }
+
+        return resId;
     }
 
     @NonNull
@@ -178,6 +188,14 @@ public final class AppConfiguration {
         }
 
         private void check() {
+            if (TextUtils.isEmpty(url)) {
+                throw new ReferralsConfiguration.ReferralsRuntimeException("url is null");
+            }
+
+            if (TextUtils.isEmpty(packageName)) {
+                throw new ReferralsConfiguration.ReferralsRuntimeException("package is null");
+            }
+
             if (notify) {
                 if (TextUtils.isEmpty(notificationChannelName)) {
                     notificationChannelName = "Referrals Job";

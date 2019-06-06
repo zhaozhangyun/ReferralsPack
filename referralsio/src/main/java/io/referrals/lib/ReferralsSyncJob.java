@@ -14,6 +14,8 @@ import com.evernote.android.job.Job;
 
 import java.util.Random;
 
+import io.referrals.lib.configuration.AppConfiguration;
+
 public class ReferralsSyncJob extends Job {
 
     private static final String TAG = "ReferralsSyncJob";
@@ -66,19 +68,11 @@ public class ReferralsSyncJob extends Job {
                 .setChannelId(REFERRALS_TAG)
                 .setSound(null)
                 .setContentIntent(pendingIntent)
+                .setSmallIcon(config.getNotificationSmallIcon())
                 .setLargeIcon(config.getNotificationLargeIcon())
                 .setShowWhen(true)
                 .setColor(config.getNotificationColor())
                 .setLocalOnly(true);
-        int resSmallIconId = config.getContext().getResources().getIdentifier(
-                Config.DEFAULT_REFERRALS_IO_NOTIFICATION_SMALL_ICON_ID, "drawable",
-                config.getContext().getPackageName());
-        if (resSmallIconId > 0) {
-            builder.setSmallIcon(resSmallIconId);
-        } else {
-            builder.setSmallIcon(R.drawable.ref_io_notification_icon_default);
-        }
-
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
         return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
