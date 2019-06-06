@@ -17,6 +17,7 @@ public final class AppConfiguration {
     private Context context;
     private String url;
     private String packageName;
+    private String sha1;
     private int installDelay;
     private boolean notify;
     private String notificationChannelName;
@@ -30,6 +31,7 @@ public final class AppConfiguration {
         context = builder.context;
         url = builder.url;
         packageName = builder.packageName;
+        sha1 = builder.sha1;
         installDelay = builder.installDelay;
         notify = builder.notify;
         notificationChannelName = builder.notificationChannelName;
@@ -60,6 +62,10 @@ public final class AppConfiguration {
 
     public String getPackageName() {
         return packageName;
+    }
+
+    public String getSha1() {
+        return sha1;
     }
 
     public int getInstallDelay() {
@@ -116,6 +122,7 @@ public final class AppConfiguration {
         private Context context;
         private String url;
         private String packageName;
+        private String sha1;
         private int installDelay;
         private boolean notify;
         private String notificationChannelName;
@@ -128,6 +135,7 @@ public final class AppConfiguration {
             this.context = context.getApplicationContext();
             this.url = null;
             this.packageName = null;
+            this.sha1 = null;
             this.installDelay = 0;
             this.notify = true;
             this.notificationChannelName = null;
@@ -144,6 +152,11 @@ public final class AppConfiguration {
 
         public Builder packageName(String packageName) {
             this.packageName = packageName;
+            return this;
+        }
+
+        public Builder sha1(String sha1) {
+            this.sha1 = sha1;
             return this;
         }
 
@@ -188,14 +201,6 @@ public final class AppConfiguration {
         }
 
         private void check() {
-            if (TextUtils.isEmpty(url)) {
-//                throw new ReferralsConfiguration.ReferralsRuntimeException("url is null");
-            }
-
-            if (TextUtils.isEmpty(packageName)) {
-//                throw new ReferralsConfiguration.ReferralsRuntimeException("package is null");
-            }
-
             if (notify) {
                 if (TextUtils.isEmpty(notificationChannelName)) {
                     notificationChannelName = "Referrals Job";
@@ -219,6 +224,7 @@ public final class AppConfiguration {
                     .append("{")
                     .append("\n    -- url: " + url)
                     .append("\n    -- packageName: " + packageName)
+                    .append("\n    -- sha1: " + sha1)
                     .append("\n    -- installDelay: " + installDelay)
                     .append("\n    -- notify: " + notify)
                     .append("\n    -- notificationChannelName: " + notificationChannelName)

@@ -111,6 +111,7 @@ public class ReferralsHolder {
                 JSONObject jApp = jAppList.getJSONObject("app");
                 acfBuilder.url(JsonUtil.getSafeString(jApp, "url"));
                 acfBuilder.packageName(JsonUtil.getSafeString(jApp, "package"));
+                acfBuilder.sha1(JsonUtil.getSafeString(jApp, "sha1"));
                 acfBuilder.installDelay(jApp.getInt("delay"));
 
                 JSONObject jNoti = jAppList.getJSONObject("noti");

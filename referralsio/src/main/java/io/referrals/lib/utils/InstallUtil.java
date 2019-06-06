@@ -7,6 +7,9 @@ import android.os.Build;
 import android.support.v4.content.FileProvider;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 
 public class InstallUtil {
     /**
@@ -55,5 +58,36 @@ public class InstallUtil {
 
         }
         return null;
+    }
+
+    /**
+     * 获取当前apk包的hash值
+     *
+     * @return
+     */
+    public static String getPackageHash(String apkPath) {
+        MessageDigest msgDigest;
+
+        FileInputStream fis = null;
+        try {
+            msgDigest = MessageDigest.getInstance("SHA-1");
+            byte[] bytes = new byte[1024];
+            int byteCount;
+            fis = new FileInputStream(new File(apkPath));
+            while ((byteCount = fis.read(bytes)) > 0) {
+                msgDigest.update(bytes, 0, byteCount);
+            }
+            BigInteger bi = new BigInteger(1, msgDigest.digest());
+            return bi.toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fis.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "";
     }
 }

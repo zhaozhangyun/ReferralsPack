@@ -47,7 +47,7 @@ class ReferralsSyncEngine {
             bundle.putBoolean("result", true);
         } else {
             bundle.putBoolean("installed", false);
-            ReferralsUtil.getApkInBackground(context, appConfig.getUrl(), new DownloadCallback() {
+            ReferralsUtil.getApkInBackground(context, appConfig, new DownloadCallback() {
                 @Override
                 public void downloadSuccess() {
                     bundle.putBoolean("downloaded", true);

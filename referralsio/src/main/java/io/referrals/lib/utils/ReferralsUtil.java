@@ -4,7 +4,13 @@ import android.content.Context;
 
 import java.io.File;
 
+import io.referrals.lib.L;
+import io.referrals.lib.configuration.AppConfiguration;
+
 public class ReferralsUtil {
+
+    private static final String TAG = "ReferralsUtil";
+
     /**
      * 根据apk的包名判断apk是否安装了；
      */
@@ -19,11 +25,23 @@ public class ReferralsUtil {
         return installed;
     }
 
-    public static void getApkInBackground(Context context, String url, DownloadCallback callback) {
+    public static void getApkInBackground(Context context, AppConfiguration appConfig, DownloadCallback callback) {
+        String url = appConfig.getUrl();
         String destinationPath = DownloadUtil.getDownloadFilePath(context, url);
-        if (new File(destinationPath).exists()) {
-            callback.downloadSuccess();
-            return;
+        File f = new File(destinationPath);
+        if (f.exists()) {
+            String sha1 = InstallUtil.getPackageHash(destinationPath);
+            L.v(TAG, "sha1: " + sha1);
+            try {
+                if (sha1.equalsIgnoreCase(appConfig.getSha1())) {
+                    callback.downloadSuccess();
+                    return;
+                } else {
+                    f.delete();
+                }
+            } catch (Exception e) {
+                f.delete();
+            }
         }
         DownloadUtil.downLoad(url, destinationPath, callback);
     }

@@ -9,7 +9,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import io.referrals.lib.L;
+
 public class DownloadUtil {
+
+    private static final String TAG = "DownloadUtil";
     public static final String APK_FOLDER = "downloads";
 
     public static String getDownloadFilePath(Context context, String url) {
@@ -60,6 +64,8 @@ public class DownloadUtil {
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
+                    String sha1 = InstallUtil.getPackageHash(filePath);
+                    L.v(TAG, "sha1: " + sha1);
                     callback.downloadSuccess();
                 }
             } catch (Exception e) {
