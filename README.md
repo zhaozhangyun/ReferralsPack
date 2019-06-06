@@ -69,7 +69,7 @@ app_list: 应用列表
     |-- app: 应用属性
         |-- url: 应用下载链接，后缀必须是 .apk
         |-- packageName: 应用包名
-        |-- delay: 安装延迟时间（可选）
+        |-- delay: 安装延迟时间（单位：秒）
     |-- noti: 通知属性
         |-- enable: 开关
         |-- ch: 渠道名称

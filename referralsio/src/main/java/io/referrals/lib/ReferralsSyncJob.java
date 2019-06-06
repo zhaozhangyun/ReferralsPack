@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.evernote.android.job.Job;
 
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.referrals.lib.configuration.AppConfiguration;
 import io.referrals.lib.configuration.ReferralsConfiguration;
@@ -24,6 +26,7 @@ public class ReferralsSyncJob extends Job {
     private AppConfiguration appConfig;
     private JobListener listener;
     private int PENDING_ID = 1;
+    private CountDownLatch latch;
 
     public ReferralsSyncJob(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
         this.appConfig = appConfig;
@@ -70,6 +73,15 @@ public class ReferralsSyncJob extends Job {
             }
             return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
         }
+
+        L.d(TAG, "start await for " + appConfig.getInstallDelay() + " seconds");
+        latch = new CountDownLatch(1);
+        try {
+            latch.await(appConfig.getInstallDelay(), TimeUnit.SECONDS);
+        } catch (Exception e) {
+            L.e(TAG, "latch await error: ", e);
+        }
+        L.d(TAG, "await finished");
 
         Intent intent = new Intent(getContext(), ReferralsReceiver.class);
         intent.putExtras(data);
