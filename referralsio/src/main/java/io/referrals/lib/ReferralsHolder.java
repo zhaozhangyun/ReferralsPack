@@ -29,6 +29,7 @@ public class ReferralsHolder {
     private static final String TAG = "ReferralsHolder";
     private static ReferralsHolder instance = new ReferralsHolder();
     private static JobManager jobManager;
+    static ReferralsConfiguration sRefConfig;
     private int lastJobId;
 
     private ReferralsHolder() {
@@ -60,6 +61,8 @@ public class ReferralsHolder {
         if (!(context instanceof Application)) {
             throw new RuntimeException("Context must be Application!");
         }
+
+        sRefConfig = refConfig;
 
         JobConfig.reset();
 

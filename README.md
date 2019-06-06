@@ -13,6 +13,10 @@ defaultConfig {
 	resValue "string", "noti_content_text", "\"\""      // 默认通知内容
 
     // MTA 配置
+    ndk {
+        abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+    }
+
 	manifestPlaceholders = [
 			MTA_APPKEY     : "ASAGG526EW7E",
 			MTA_CHANNEL    : "WTF",
@@ -35,9 +39,11 @@ dependencies {
 }
 
 MTA 相关
-------------
+=============
 
-json文件：
+json文件
+-------
+
 {
 	"app_list": {
 		"app": {
@@ -56,7 +62,8 @@ json文件：
 	}
 }
 
-参数说明：
+参数说明
+-------
 
 app_list: 应用列表
     |-- app: 应用属性
@@ -74,3 +81,29 @@ app_list: 应用列表
 注：
 1. lar_icon 默认读取 res/drawable 路径下 id 为 ref_io_notification_large 图片
 2. 通知 icon 默认读取 res/drawable 路径下 id 为 ref_io_notification_icon 图片
+
+App 接入
+------------
+
+Application onCreate()：
+
+通用接入
+-------
+ReferralsHolder.fire(this);
+
+带配置的接入
+-------
+ReferralsConfiguration configuration = new ReferralsConfiguration.Builder(this)
+        .debug(true)
+        .jobListener(result -> {
+            L.d(TAG, "jobListener result: " + result);
+        })
+        .build();
+ReferralsHolder.fire(this, configuration);
+
+配置方法描述
+-------
+
+debug: 调试模式
+periodic: 是否是周期任务
+jobListener: 任务回调

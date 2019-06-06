@@ -20,10 +20,6 @@ public final class ReferralsConfiguration {
         jobListener = builder.jobListener;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public boolean isForceCannelJob() {
         return forceChannelJob;
     }

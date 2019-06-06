@@ -11,7 +11,6 @@ import com.tencent.stat.common.StatConstants;
 import io.referrals.lib.BuildConfig;
 import io.referrals.lib.L;
 import io.referrals.lib.ReferralsHolder;
-import io.referrals.lib.ReferralsSyncJob;
 import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class App extends Application {

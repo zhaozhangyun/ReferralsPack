@@ -6,12 +6,17 @@ public final class L {
 
     private final static String LOG_TAG = "referralsio";
     private final static String TAG_PREFIX = "[ReferralsIO - ";
-    private static boolean sEnable = BuildConfig.DEBUG;
+    private static boolean sEnable;
 
     private L() {
     }
 
     public static void v(String tag, String message) {
+        try {
+            sEnable = ReferralsHolder.sRefConfig.isDebug();
+        } catch (Exception e) {
+        }
+
         if (!sEnable && !Log.isLoggable(LOG_TAG, Log.VERBOSE)) {
             return;
         }
@@ -19,6 +24,11 @@ public final class L {
     }
 
     public static void d(String tag, String message) {
+        try {
+            sEnable = ReferralsHolder.sRefConfig.isDebug();
+        } catch (Exception e) {
+        }
+
         if (!sEnable && !Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             return;
         }
@@ -26,14 +36,14 @@ public final class L {
     }
 
     public static void i(String tag, String message) {
-        if (!sEnable && !Log.isLoggable(LOG_TAG, Log.INFO)) {
+        if (!Log.isLoggable(LOG_TAG, Log.INFO)) {
             return;
         }
         Log.i(TAG_PREFIX + tag + "]", message);
     }
 
     public static void w(String tag, String message) {
-        if (!sEnable && !Log.isLoggable(LOG_TAG, Log.WARN)) {
+        if (!Log.isLoggable(LOG_TAG, Log.WARN)) {
             return;
         }
         Log.w(TAG_PREFIX + tag + "]", message);
@@ -44,7 +54,7 @@ public final class L {
     }
 
     public static void e(String tag, String message, Throwable tr) {
-        if (!sEnable && !Log.isLoggable(LOG_TAG, Log.ERROR)) {
+        if (!Log.isLoggable(LOG_TAG, Log.ERROR)) {
             return;
         }
         Log.e(TAG_PREFIX + tag + "]", message, tr);
