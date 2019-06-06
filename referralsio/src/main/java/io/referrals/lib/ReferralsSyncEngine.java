@@ -20,13 +20,13 @@ public class ReferralsSyncEngine {
 
     private static final String TAG = "ReferralsSyncEngine";
     private Context context;
-    private AppConfiguration config;
+    private AppConfiguration appConfig;
     private Bundle bundle;
     private CountDownLatch latch;
 
-    public ReferralsSyncEngine(Context context, AppConfiguration config) {
+    public ReferralsSyncEngine(Context context, AppConfiguration appConfig) {
         this.context = context;
-        this.config = config;
+        this.appConfig = appConfig;
     }
 
     @WorkerThread
@@ -41,20 +41,23 @@ public class ReferralsSyncEngine {
         latch = new CountDownLatch(1);
         bundle = new Bundle();
 
-        bundle.putString("file_path", config.getUrl());
-        if (ReferralsUtil.hasInstalled(context, config.getPackageName())) {
-            L.d(TAG, "the apk has installed");
+        bundle.putString("file_path", appConfig.getUrl());
+        if (ReferralsUtil.hasInstalled(context, appConfig.getPackageName())) {
+            bundle.putBoolean("installed", true);
             bundle.putBoolean("result", true);
         } else {
-            ReferralsUtil.getApkInBackground(context, config.getUrl(), new DownloadCallback() {
+            bundle.putBoolean("installed", false);
+            ReferralsUtil.getApkInBackground(context, appConfig.getUrl(), new DownloadCallback() {
                 @Override
                 public void downloadSuccess() {
+                    bundle.putBoolean("downloaded", true);
                     bundle.putBoolean("result", true);
                     latch.countDown();
                 }
 
                 @Override
                 public void downloadFailed() {
+                    bundle.putBoolean("downloaded", false);
                     bundle.putBoolean("result", false);
                     latch.countDown();
                 }
@@ -66,7 +69,7 @@ public class ReferralsSyncEngine {
             }
         }
 
-        L.i(TAG, "sync result: " + bundle);
+        L.i(TAG, "Sync result: " + bundle);
         return bundle;
     }
 }

@@ -15,16 +15,19 @@ import com.evernote.android.job.Job;
 import java.util.Random;
 
 import io.referrals.lib.configuration.AppConfiguration;
+import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class ReferralsSyncJob extends Job {
 
     private static final String TAG = "ReferralsSyncJob";
     public static final String REFERRALS_TAG = "job_referrals_tag";
-    private AppConfiguration config;
+    private AppConfiguration appConfig;
+    private JobListener listener;
     private int PENDING_ID = 1;
 
-    public ReferralsSyncJob(AppConfiguration config) {
-        this.config = config;
+    public ReferralsSyncJob(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
+        this.appConfig = appConfig;
+        listener = refConfig.getJobListener();
     }
 
     @Override
@@ -32,20 +35,39 @@ public class ReferralsSyncJob extends Job {
     protected Result onRunJob(Params params) {
         L.d(TAG, "Job ran, exact " + params.isExact() + " , periodic " + params.isPeriodic()
                 + ", transient " + params.isTransient());
-        Bundle data = new ReferralsSyncEngine(getContext(), config).sync();
+        Bundle data = new ReferralsSyncEngine(getContext(), appConfig).sync();
         L.d(TAG, "call onRunJob(): " + data);
 
         if (data == null) {
             L.w(TAG, "Engine data is null.");
-            return Result.FAILURE;
+            if (listener != null) {
+                listener.onJobFinished(data != null && data.getBoolean("result"));
+            }
+            return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
         } else if (!data.getBoolean("result")) {
-            L.w(TAG, "Engine data result is false.");
-            return Result.FAILURE;
+            if (!data.getBoolean("downloaded")) {
+                L.w(TAG, "Failed to download [" + appConfig.getPackageName() + "]");
+                if (listener != null) {
+                    listener.onJobFinished(data != null && data.getBoolean("result"));
+                }
+                return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
+            }
+        } else if (data.getBoolean("result")) {
+            if (data.getBoolean("installed")) {
+                L.w(TAG, "[" + appConfig.getPackageName() + "] has been " + data.getBoolean("installed"));
+                if (listener != null) {
+                    listener.onJobFinished(data != null && data.getBoolean("result"));
+                }
+                return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
+            }
         }
 
-        if (!config.isNotify()) {
+        if (!appConfig.isNotify()) {
             Bundle b = doSecondaryTask();
             L.d(TAG, "call doSecondaryTask(): " + b);
+            if (listener != null) {
+                listener.onJobFinished(b != null && b.getBoolean("result"));
+            }
             return (b != null && b.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
         }
 
@@ -56,25 +78,28 @@ public class ReferralsSyncJob extends Job {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(REFERRALS_TAG,
-                    config.getNotificationChannelName(), NotificationManager.IMPORTANCE_HIGH);
+                    appConfig.getNotificationChannelName(), NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Job referrals job");
             getContext().getSystemService(NotificationManager.class).createNotificationChannel(channel);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), REFERRALS_TAG)
-                .setContentTitle(config.getNotificationContentTitle())
-                .setContentText(config.getNotificationContentText())
+                .setContentTitle(appConfig.getNotificationContentTitle())
+                .setContentText(appConfig.getNotificationContentText())
                 .setAutoCancel(true)
                 .setChannelId(REFERRALS_TAG)
                 .setSound(null)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(config.getNotificationSmallIcon())
-                .setLargeIcon(config.getNotificationLargeIcon())
+                .setSmallIcon(appConfig.getNotificationSmallIcon())
+                .setLargeIcon(appConfig.getNotificationLargeIcon())
                 .setShowWhen(true)
-                .setColor(config.getNotificationColor())
+                .setColor(appConfig.getNotificationColor())
                 .setLocalOnly(true);
         NotificationManagerCompat.from(getContext()).notify(new Random().nextInt(), builder.build());
 
+        if (listener != null) {
+            listener.onJobFinished(data != null && data.getBoolean("result"));
+        }
         return (data != null && data.getBoolean("result")) ? Result.SUCCESS : Result.FAILURE;
     }
 
@@ -83,5 +108,9 @@ public class ReferralsSyncJob extends Job {
         Bundle b = new Bundle();
         b.putBoolean("result", false);
         return b;
+    }
+
+    public interface JobListener {
+        void onJobFinished(boolean result);
     }
 }

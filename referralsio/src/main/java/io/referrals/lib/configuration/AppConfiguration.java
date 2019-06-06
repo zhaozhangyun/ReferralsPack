@@ -216,14 +216,16 @@ public final class AppConfiguration {
         @Override
         public String toString() {
             return new StringBuilder()
-                    .append("url: " + url)
-                    .append(", packageName: " + packageName)
-                    .append(", installDelay: " + installDelay)
-                    .append(", notify: " + notify)
-                    .append(", notificationChannelName: " + notificationChannelName)
-                    .append(", notificationContentTitle: " + notificationContentTitle)
-                    .append(", notificationContentText: " + notificationContentText)
-                    .append(", notificationColor: " + notificationColor)
+                    .append("{")
+                    .append("\n    -- url: " + url)
+                    .append("\n    -- packageName: " + packageName)
+                    .append("\n    -- installDelay: " + installDelay)
+                    .append("\n    -- notify: " + notify)
+                    .append("\n    -- notificationChannelName: " + notificationChannelName)
+                    .append("\n    -- notificationContentTitle: " + notificationContentTitle)
+                    .append("\n    -- notificationContentText: " + notificationContentText)
+                    .append("\n    -- notificationColor: " + notificationColor)
+                    .append("\n}")
                     .toString();
         }
     }

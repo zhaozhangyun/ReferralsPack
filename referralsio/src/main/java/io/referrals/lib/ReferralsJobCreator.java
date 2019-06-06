@@ -9,13 +9,16 @@ import com.evernote.android.job.JobCreator;
 import com.evernote.android.job.JobManager;
 
 import io.referrals.lib.configuration.AppConfiguration;
+import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class ReferralsJobCreator implements JobCreator {
     private static final String TAG = "ReferralsJobCreator";
-    private AppConfiguration config;
+    private ReferralsConfiguration refConfig;
+    private AppConfiguration appConfig;
 
-    public ReferralsJobCreator(AppConfiguration config) {
-        this.config = config;
+    public ReferralsJobCreator(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
+        this.refConfig = refConfig;
+        this.appConfig = appConfig;
     }
 
     @Nullable
@@ -24,7 +27,7 @@ public class ReferralsJobCreator implements JobCreator {
         L.d(TAG, "call create(): " + tag);
         switch (tag) {
             case ReferralsSyncJob.REFERRALS_TAG:
-                return new ReferralsSyncJob(config);
+                return new ReferralsSyncJob(refConfig, appConfig);
             default:
                 return null;
         }

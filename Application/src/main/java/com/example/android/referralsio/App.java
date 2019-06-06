@@ -9,10 +9,14 @@ import com.tencent.stat.StatService;
 import com.tencent.stat.common.StatConstants;
 
 import io.referrals.lib.BuildConfig;
+import io.referrals.lib.L;
 import io.referrals.lib.ReferralsHolder;
+import io.referrals.lib.ReferralsSyncJob;
 import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class App extends Application {
+
+    private static final String TAG = "App";
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -34,7 +38,9 @@ public class App extends Application {
 
         ReferralsConfiguration configuration = new ReferralsConfiguration.Builder(this)
                 .debug(BuildConfig.DEBUG)
-                .periodic(false)
+                .jobListener(result -> {
+                    L.d(TAG, "jobListener result: " + result);
+                })
                 .build();
         ReferralsHolder.fire(this, configuration);
     }

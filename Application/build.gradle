@@ -16,6 +16,10 @@ android {
         resValue "string", "noti_content_title", "\"🎉炫闪来电秀下载成功！\""
         resValue "string", "noti_content_text", "\"流行视频，热门音乐...酷炫来电等你体验！\""
 
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
         manifestPlaceholders = [
                 MTA_APPKEY     : "ASAGG526EW7E",
                 MTA_CHANNEL    : "WTF",

@@ -51,7 +51,11 @@ public class ReferralsHolder {
         }
     };
 
-    public static void fire(Context context, final ReferralsConfiguration config) {
+    public static void fire(Context context) {
+        fire(context, null);
+    }
+
+    public static void fire(Context context, final ReferralsConfiguration refConfig) {
         L.i(TAG, "call fire(): context=" + context);
         if (!(context instanceof Application)) {
             throw new RuntimeException("Context must be Application!");
@@ -83,18 +87,17 @@ public class ReferralsHolder {
         }
 
         jobManager = JobManager.create(context);
-        if (config.isForceCannelJob()) {
+        if (refConfig != null && refConfig.isForceCannelJob()) {
             jobManager.cancelAll();
         }
 
         new Handler(Looper.myLooper()).postDelayed(() -> {
             AppConfiguration.Builder acfBuilder = new AppConfiguration.Builder(context);
 
-            String configBody = StatConfig.getCustomProperty(Config.REMOTE_REFERRALS_IO_CONFIG, null);
-            L.v(TAG, "configBody: " + configBody);
             try {
+                String configBody = StatConfig.getCustomProperty(Config.REMOTE_REFERRALS_IO_CONFIG, null);
                 JSONObject jo = new JSONObject(configBody);
-                L.d(TAG, "jo: " + jo);
+                L.v(TAG, "jo: " + jo);
 
                 JSONObject jAppList = jo.getJSONObject("app_list");
 
@@ -115,10 +118,11 @@ public class ReferralsHolder {
                 L.e(TAG, "fetch appConfig error: ", e);
             }
 
-            jobManager.addJobCreator(new ReferralsJobCreator(acfBuilder.build()));
+            jobManager.addJobCreator(new ReferralsJobCreator(refConfig, acfBuilder.build()));
 
             sHandler.sendMessageDelayed(
-                    sHandler.obtainMessage(0, 0, 0, config.isPeriodic()), 1_000L);
+                    sHandler.obtainMessage(0, 0, 0,
+                            refConfig == null ? false : refConfig.isPeriodic()), 1_000L);
         }, 3_000L);
     }
 
