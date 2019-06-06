@@ -18,12 +18,14 @@ import io.referrals.lib.utils.ReferralsUtil;
 public class ReferralsSyncEngine {
 
     private static final String TAG = "ReferralsSyncEngine";
-    private final Context context;
+    private Context context;
+    private AppConfiguration config;
     private Bundle bundle;
     private CountDownLatch latch;
 
-    public ReferralsSyncEngine(Context context) {
+    public ReferralsSyncEngine(Context context, AppConfiguration config) {
         this.context = context;
+        this.config = config;
     }
 
     @WorkerThread
@@ -38,13 +40,12 @@ public class ReferralsSyncEngine {
         latch = new CountDownLatch(1);
         bundle = new Bundle();
 
-        final String filePath = "http://dldir1.qq.com/foxmail/qqmail_android_5.6.4.10138276.2438_0.apk";
-        bundle.putString("file_path", filePath);
-        if (ReferralsUtil.hasInstalled(context, "com.tencent.androidqqmail")) {
+        bundle.putString("file_path", config.getUrl());
+        if (ReferralsUtil.hasInstalled(context, config.getPackageName())) {
             L.d(TAG, "the apk has installed");
             bundle.putBoolean("result", true);
         } else {
-            ReferralsUtil.getApkInBackground(context, filePath, new DownloadCallback() {
+            ReferralsUtil.getApkInBackground(context, config.getUrl(), new DownloadCallback() {
                 @Override
                 public void downloadSuccess() {
                     bundle.putBoolean("result", true);

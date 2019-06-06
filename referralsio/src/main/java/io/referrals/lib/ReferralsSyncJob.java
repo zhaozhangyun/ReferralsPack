@@ -18,10 +18,10 @@ public class ReferralsSyncJob extends Job {
 
     private static final String TAG = "ReferralsSyncJob";
     public static final String REFERRALS_TAG = "job_referrals_tag";
-    private ReferralsConfiguration config;
+    private AppConfiguration config;
     private int PENDING_ID = 1;
 
-    public ReferralsSyncJob(ReferralsConfiguration config) {
+    public ReferralsSyncJob(AppConfiguration config) {
         this.config = config;
     }
 
@@ -30,7 +30,7 @@ public class ReferralsSyncJob extends Job {
     protected Result onRunJob(Params params) {
         L.d(TAG, "Job ran, exact " + params.isExact() + " , periodic " + params.isPeriodic()
                 + ", transient " + params.isTransient());
-        Bundle data = new ReferralsSyncEngine(getContext()).sync();
+        Bundle data = new ReferralsSyncEngine(getContext(), config).sync();
         L.d(TAG, "call onRunJob(): " + data);
 
         if (data == null) {

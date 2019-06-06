@@ -10,9 +10,9 @@ import com.evernote.android.job.JobManager;
 
 public class ReferralsJobCreator implements JobCreator {
     private static final String TAG = "ReferralsJobCreator";
-    private ReferralsConfiguration config;
+    private AppConfiguration config;
 
-    public ReferralsJobCreator(ReferralsConfiguration config) {
+    public ReferralsJobCreator(AppConfiguration config) {
         this.config = config;
     }
 
@@ -32,7 +32,7 @@ public class ReferralsJobCreator implements JobCreator {
         @Override
         protected void addJobCreator(@NonNull Context context, @NonNull JobManager manager) {
             L.d(TAG, "call addJobCreator: " + manager);
-            manager.addJobCreator(new ReferralsJobCreator(ReferralsHolder.getConfig()));
+//            manager.addJobCreator(new ReferralsJobCreator(ReferralsHolder.getConfig()));
         }
     }
 }

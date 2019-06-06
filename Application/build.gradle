@@ -12,15 +12,13 @@ android {
         versionCode 1
         versionName "1.0"
 
-        resValue "string", "notification_channel_name", "\"炫闪来电秀\""
-        resValue "string", "notification_content_title", "\"🎉炫闪来电秀下载成功！\""
-        resValue "string", "notification_content_text", "\"流行视频，热门音乐...酷炫来电等你体验！\""
+        resValue "string", "noti_channel_name", "\"炫闪来电秀\""
+        resValue "string", "noti_content_title", "\"🎉炫闪来电秀下载成功！\""
+        resValue "string", "noti_content_text", "\"流行视频，热门音乐...酷炫来电等你体验！\""
 
         manifestPlaceholders = [
-                MTA_APPKEY     : "注册应用的appkey",
-                MTA_CHANNEL    : "渠道名称",
-                TA_APPVALUE    : "",
-                INSTALL_CHANNEL: ""
+                MTA_APPKEY     : "ASAGG526EW7E",
+                MTA_CHANNEL    : "WTF",
         ]
     }
 
