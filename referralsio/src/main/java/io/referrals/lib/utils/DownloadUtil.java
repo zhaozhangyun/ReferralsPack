@@ -21,7 +21,7 @@ public class DownloadUtil {
         return new File(downloadFolder, apkName).getAbsolutePath();
     }
 
-    public static String getApkFileName(String url) {
+    private static String getApkFileName(String url) {
         int index = url.lastIndexOf("/");
         String apkName = url.substring(index + 1);
         if (apkName.contains("apk")) {
@@ -31,7 +31,7 @@ public class DownloadUtil {
         }
     }
 
-    public static void downLoad(final String path, final String filePath, final DownloadCallback callback) {
+    static void downLoad(final String path, final String filePath, final DownloadCallback callback) {
         new Thread(() -> {
             try {
                 URL url = new URL(path);

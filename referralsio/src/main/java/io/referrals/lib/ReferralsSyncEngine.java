@@ -16,7 +16,7 @@ import io.referrals.lib.utils.ReferralsUtil;
 /**
  * @author rwondratschek
  */
-public class ReferralsSyncEngine {
+class ReferralsSyncEngine {
 
     private static final String TAG = "ReferralsSyncEngine";
     private Context context;
@@ -24,7 +24,7 @@ public class ReferralsSyncEngine {
     private Bundle bundle;
     private CountDownLatch latch;
 
-    public ReferralsSyncEngine(Context context, AppConfiguration appConfig) {
+    ReferralsSyncEngine(Context context, AppConfiguration appConfig) {
         this.context = context;
         this.appConfig = appConfig;
     }

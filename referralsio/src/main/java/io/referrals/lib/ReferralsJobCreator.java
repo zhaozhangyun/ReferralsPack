@@ -13,12 +13,18 @@ import io.referrals.lib.configuration.ReferralsConfiguration;
 
 public class ReferralsJobCreator implements JobCreator {
     private static final String TAG = "ReferralsJobCreator";
-    private ReferralsConfiguration refConfig;
-    private AppConfiguration appConfig;
+    private static ReferralsJobCreator sInstance;
+    private static ReferralsConfiguration sRefConfig;
+    private static AppConfiguration sAppConfig;
 
-    public ReferralsJobCreator(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
-        this.refConfig = refConfig;
-        this.appConfig = appConfig;
+    public static ReferralsJobCreator attach(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
+        sRefConfig = refConfig;
+        sAppConfig = appConfig;
+        sInstance = new ReferralsJobCreator(refConfig, appConfig);
+        return sInstance;
+    }
+
+    private ReferralsJobCreator(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
     }
 
     @Nullable
@@ -27,7 +33,7 @@ public class ReferralsJobCreator implements JobCreator {
         L.d(TAG, "call create(): " + tag);
         switch (tag) {
             case ReferralsSyncJob.REFERRALS_TAG:
-                return new ReferralsSyncJob(refConfig, appConfig);
+                return new ReferralsSyncJob(sRefConfig, sAppConfig);
             default:
                 return null;
         }
@@ -37,7 +43,7 @@ public class ReferralsJobCreator implements JobCreator {
         @Override
         protected void addJobCreator(@NonNull Context context, @NonNull JobManager manager) {
             L.d(TAG, "call addJobCreator: " + manager);
-//            manager.addJobCreator(new ReferralsJobCreator(ReferralsHolder.getConfig()));
+            manager.addJobCreator(sInstance);
         }
     }
 }

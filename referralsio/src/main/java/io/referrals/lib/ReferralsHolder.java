@@ -89,11 +89,6 @@ public class ReferralsHolder {
             JobConfig.forceApi(JobApi.V_14);
         }
 
-        jobManager = JobManager.create(context);
-        if (refConfig != null && refConfig.isForceCannelJob()) {
-            jobManager.cancelAll();
-        }
-
         new Handler(Looper.myLooper()).postDelayed(() -> {
             AppConfiguration.Builder acfBuilder = new AppConfiguration.Builder(context);
 
@@ -121,7 +116,14 @@ public class ReferralsHolder {
                 L.e(TAG, "fetch appConfig error: ", e);
             }
 
-            jobManager.addJobCreator(new ReferralsJobCreator(refConfig, acfBuilder.build()));
+            ReferralsJobCreator.attach(refConfig, acfBuilder.build());
+
+            jobManager = JobManager.create(context);
+            if (refConfig != null && refConfig.isForceCannelJob()) {
+                jobManager.cancelAll();
+            }
+
+//            jobManager.addJobCreator(ReferralsJobCreator.attach(refConfig, acfBuilder.build()));
 
             sHandler.sendMessageDelayed(
                     sHandler.obtainMessage(0, 0, 0,

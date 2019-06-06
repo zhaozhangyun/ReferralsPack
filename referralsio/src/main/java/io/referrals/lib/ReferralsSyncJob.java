@@ -26,7 +26,6 @@ public class ReferralsSyncJob extends Job {
     private AppConfiguration appConfig;
     private JobListener listener;
     private int PENDING_ID = 1;
-    private CountDownLatch latch;
 
     public ReferralsSyncJob(ReferralsConfiguration refConfig, AppConfiguration appConfig) {
         this.appConfig = appConfig;
@@ -75,7 +74,7 @@ public class ReferralsSyncJob extends Job {
         }
 
         L.d(TAG, "start await for " + appConfig.getInstallDelay() + " seconds");
-        latch = new CountDownLatch(1);
+        CountDownLatch latch = new CountDownLatch(1);
         try {
             latch.await(appConfig.getInstallDelay(), TimeUnit.SECONDS);
         } catch (Exception e) {
