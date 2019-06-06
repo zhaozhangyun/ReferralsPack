@@ -11,14 +11,6 @@
         android:networkSecurityConfig="@xml/network_security_config">
 
         <receiver
-            android:name=".ReferralsJobCreator$AddReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.evernote.android.job.ADD_JOB_CREATOR" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
             android:name=".ReferralsReceiver"
             android:exported="false"></receiver>
 

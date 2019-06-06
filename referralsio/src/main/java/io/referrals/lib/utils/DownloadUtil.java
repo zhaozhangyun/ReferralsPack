@@ -1,6 +1,7 @@
 package io.referrals.lib.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +13,9 @@ public class DownloadUtil {
     public static final String APK_FOLDER = "downloads";
 
     public static String getDownloadFilePath(Context context, String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
         String rootDir = context.getExternalFilesDir(null).getAbsolutePath();
         File downloadFolder = new File(rootDir, APK_FOLDER);
         if (!downloadFolder.exists()) {

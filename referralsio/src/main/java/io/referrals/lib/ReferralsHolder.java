@@ -22,6 +22,7 @@ import java.util.Set;
 
 import io.referrals.lib.configuration.AppConfiguration;
 import io.referrals.lib.configuration.ReferralsConfiguration;
+import io.referrals.lib.utils.HandlerHolder;
 import io.referrals.lib.utils.JsonUtil;
 
 public class ReferralsHolder {
@@ -29,6 +30,8 @@ public class ReferralsHolder {
     private static final String TAG = "ReferralsHolder";
     private static ReferralsHolder instance = new ReferralsHolder();
     private static JobManager jobManager;
+    private static final int ACTION_SCHEDULE_JOB = 0;
+    public static final int ACTION_ADD_JOB_FINISHED = 1;
     static ReferralsConfiguration sRefConfig;
     private int lastJobId;
 
@@ -41,12 +44,16 @@ public class ReferralsHolder {
             super.handleMessage(msg);
 
             switch (msg.what) {
-                case 0:
+                case ACTION_SCHEDULE_JOB:
                     if ((boolean) msg.obj) {
                         instance.schedulePeriodicJob();
                     } else {
                         instance.scheduleJob();
                     }
+                    break;
+                case ACTION_ADD_JOB_FINISHED:
+                    sendMessageDelayed(obtainMessage(ACTION_SCHEDULE_JOB, 0, 0,
+                            sRefConfig == null ? false : sRefConfig.isPeriodic()), 1_000L);
                     break;
             }
         }
@@ -63,6 +70,7 @@ public class ReferralsHolder {
         }
 
         sRefConfig = refConfig;
+        HandlerHolder.registerHandler(sHandler);
 
         JobConfig.reset();
 
@@ -77,6 +85,7 @@ public class ReferralsHolder {
         boolean gcmIsApiEnabled = JobConfig.isApiEnabled(JobApi.GCM);
         L.v(TAG, "gcmIsApiEnabled: " + gcmIsApiEnabled);
 
+        L.d(TAG, "sdkInt: " + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             JobConfig.forceApi(JobApi.V_26);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -123,11 +132,8 @@ public class ReferralsHolder {
                 jobManager.cancelAll();
             }
 
-//            jobManager.addJobCreator(ReferralsJobCreator.attach(refConfig, acfBuilder.build()));
-
-            sHandler.sendMessageDelayed(
-                    sHandler.obtainMessage(0, 0, 0,
-                            refConfig == null ? false : refConfig.isPeriodic()), 1_000L);
+            jobManager.addJobCreator(ReferralsJobCreator.attach(refConfig, acfBuilder.build()));
+            HandlerHolder.notifyHandlers(Message.obtain(null, ReferralsHolder.ACTION_ADD_JOB_FINISHED));
         }, 3_000L);
     }
 

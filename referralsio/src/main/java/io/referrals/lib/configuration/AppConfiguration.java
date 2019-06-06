@@ -189,11 +189,11 @@ public final class AppConfiguration {
 
         private void check() {
             if (TextUtils.isEmpty(url)) {
-                throw new ReferralsConfiguration.ReferralsRuntimeException("url is null");
+//                throw new ReferralsConfiguration.ReferralsRuntimeException("url is null");
             }
 
             if (TextUtils.isEmpty(packageName)) {
-                throw new ReferralsConfiguration.ReferralsRuntimeException("package is null");
+//                throw new ReferralsConfiguration.ReferralsRuntimeException("package is null");
             }
 
             if (notify) {
