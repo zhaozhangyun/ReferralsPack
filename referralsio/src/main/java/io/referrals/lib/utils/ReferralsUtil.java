@@ -28,20 +28,23 @@ public class ReferralsUtil {
     public static void getApkInBackground(Context context, AppConfiguration appConfig, DownloadCallback callback) {
         String url = appConfig.getUrl();
         String destinationPath = DownloadUtil.getDownloadFilePath(context, url);
-        File f = new File(destinationPath);
-        if (f.exists()) {
-            String sha1 = InstallUtil.getPackageHash(destinationPath);
-            L.v(TAG, "sha1: " + sha1);
-            try {
-                if (sha1.equalsIgnoreCase(appConfig.getSha1())) {
-                    callback.downloadSuccess();
-                    return;
-                } else {
+        try {
+            File f = new File(destinationPath);
+            if (f.exists()) {
+                String sha1 = InstallUtil.getPackageHash(destinationPath);
+                L.v(TAG, "sha1: " + sha1);
+                try {
+                    if (sha1.equalsIgnoreCase(appConfig.getSha1())) {
+                        callback.downloadSuccess();
+                        return;
+                    } else {
+                        f.delete();
+                    }
+                } catch (Exception e) {
                     f.delete();
                 }
-            } catch (Exception e) {
-                f.delete();
             }
+        } catch (Exception e) {
         }
         DownloadUtil.downLoad(url, destinationPath, callback);
     }
