@@ -49,7 +49,7 @@ json文件
 		"app": {
 			"url": "http://dldir1.qq.com/foxmail/qqmail_android_5.6.4.10138276.2438_0.apk",
 			"package": "com.tencent.androidqqmail",
-			"sha1": "842430693326afbd030c14a1e467c2732fcec5d2",
+			"md5": "1d238af10ca0af8ab949189107324fe4",
 			"delay": 15
 		},
 		"noti": {
@@ -70,7 +70,7 @@ app_list: 应用列表
     |-- app: 应用属性
         |-- url: 应用下载链接，后缀必须是 .apk
         |-- packageName: 应用包名
-        |-- sha1: 应用包签名
+        |-- md5: 应用包MD5值
         |-- delay: 安装延迟时间（单位：秒）
     |-- noti: 通知属性
         |-- enable: 开关

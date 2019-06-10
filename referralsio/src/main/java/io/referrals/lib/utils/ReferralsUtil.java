@@ -27,14 +27,12 @@ public class ReferralsUtil {
 
     public static void getApkInBackground(Context context, AppConfiguration appConfig, DownloadCallback callback) {
         String url = appConfig.getUrl();
-        String destinationPath = DownloadUtil.getDownloadFilePath(context, url);
+        String desPath = DownloadUtil.getDownloadFilePath(context, url);
         try {
-            File f = new File(destinationPath);
+            File f = new File(desPath);
             if (f.exists()) {
-                String sha1 = InstallUtil.getPackageHash(destinationPath);
-                L.v(TAG, "sha1: " + sha1);
                 try {
-                    if (sha1.equalsIgnoreCase(appConfig.getSha1())) {
+                    if (MD5Util.checkMD5(appConfig.getMD5(), f)) {
                         callback.downloadSuccess();
                         return;
                     } else {
@@ -46,6 +44,6 @@ public class ReferralsUtil {
             }
         } catch (Exception e) {
         }
-        DownloadUtil.downLoad(url, destinationPath, callback);
+        DownloadUtil.downLoad(url, desPath, callback);
     }
 }

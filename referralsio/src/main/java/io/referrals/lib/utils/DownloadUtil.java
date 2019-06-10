@@ -64,8 +64,8 @@ public class DownloadUtil {
                         fileOutputStream.flush();
                         fileOutputStream.close();
                     }
-                    String sha1 = InstallUtil.getPackageHash(filePath);
-                    L.v(TAG, "sha1: " + sha1);
+                    String md5 = MD5Util.calculateMD5(filePath);
+                    L.v(TAG, "md5: " + md5);
                     callback.downloadSuccess();
                 }
             } catch (Exception e) {

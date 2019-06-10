@@ -17,7 +17,7 @@ public final class AppConfiguration {
     private Context context;
     private String url;
     private String packageName;
-    private String sha1;
+    private String md5;
     private int installDelay;
     private boolean notify;
     private String notificationChannelName;
@@ -31,7 +31,7 @@ public final class AppConfiguration {
         context = builder.context;
         url = builder.url;
         packageName = builder.packageName;
-        sha1 = builder.sha1;
+        md5 = builder.md5;
         installDelay = builder.installDelay;
         notify = builder.notify;
         notificationChannelName = builder.notificationChannelName;
@@ -64,8 +64,8 @@ public final class AppConfiguration {
         return packageName;
     }
 
-    public String getSha1() {
-        return sha1;
+    public String getMD5() {
+        return md5;
     }
 
     public int getInstallDelay() {
@@ -122,7 +122,7 @@ public final class AppConfiguration {
         private Context context;
         private String url;
         private String packageName;
-        private String sha1;
+        private String md5;
         private int installDelay;
         private boolean notify;
         private String notificationChannelName;
@@ -135,7 +135,7 @@ public final class AppConfiguration {
             this.context = context.getApplicationContext();
             this.url = null;
             this.packageName = null;
-            this.sha1 = null;
+            this.md5 = null;
             this.installDelay = 0;
             this.notify = true;
             this.notificationChannelName = null;
@@ -155,8 +155,8 @@ public final class AppConfiguration {
             return this;
         }
 
-        public Builder sha1(String sha1) {
-            this.sha1 = sha1;
+        public Builder md5(String md5) {
+            this.md5 = md5;
             return this;
         }
 
@@ -224,7 +224,7 @@ public final class AppConfiguration {
                     .append("{")
                     .append("\n    -- url: " + url)
                     .append("\n    -- packageName: " + packageName)
-                    .append("\n    -- sha1: " + sha1)
+                    .append("\n    -- md5: " + md5)
                     .append("\n    -- installDelay: " + installDelay)
                     .append("\n    -- notify: " + notify)
                     .append("\n    -- notificationChannelName: " + notificationChannelName)
