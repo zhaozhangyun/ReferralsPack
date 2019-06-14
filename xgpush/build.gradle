@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+//apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion 28
+
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        consumerProguardFiles 'consumer-rules.pro'
+
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+
+        manifestPlaceholders = [
+                XG_ACCESS_ID : "",
+                XG_ACCESS_KEY: "",
+                //如果需要华为通道，则加上华为的APPID
+                HW_APPID     : "",
+                //如果需要加入小米通道，则加上应用包名
+                PACKAGE_NAME : ""
+        ]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    //增加以下依赖
+    api 'com.tencent.xinge:xinge:4.3.2-release'
+    api 'com.tencent.wup:wup:1.0.0.E-Release'
+    api 'com.tencent.jg:jg:1.1'
+    api 'com.tencent.mid:mid:4.0.7-Release'
+
+    api 'com.tencent.xinge:mipush:4.3.2-xiaomi-release'
+//    api 'com.tencent.xinge:xgmz:4.3.2-meizu-release'
+//    api 'com.tencent.xinge:xghw:4.3.2-huawei-release'
+    //需要集成fcm增加以下依赖并将google-services.json放进你应用model的根路径下:
+//    api 'com.tencent.xinge:fcm:4.3.2-release'
+//    api 'com.google.firebase:firebase-messaging:17.3.1'
+}
